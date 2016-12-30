@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html ng-app='app'>
+   <head>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.0/jquery-ui.js"></script>
+    <script src="js/angular.js"></script>
+    <script src='js/angular-route.min.js'></script>
+    <script src="js/angular-locale_ca-es.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/persones.js"></script>
+    <script src="js/remeses.js"></script>
+    <script src="js/proves.js"></script>
+    <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.0.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.0/css/smoothness/jquery-ui-1.10.0.custom.min.css" />   
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+   
+  </head>
+<body ng-controller="MainControler"> 
+    <div class="container">
+        <ng-include src="urlCap"></ng-include>
+        <div ng-view></div>
+        <ng-include src="urlPeu"></ng-include>
+    </div>
+</body>
+</html>

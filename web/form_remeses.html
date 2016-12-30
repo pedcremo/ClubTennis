@@ -1,0 +1,32 @@
+
+<script>
+  $(function() {
+    $( "#dataRemesa").datepicker({dateFormat: 'dd/mm/yy'});
+  });
+  </script>
+ <ng-include src="urlMenu"></ng-include>
+<div class="modal-header">
+    <h3>Nova remesa!</h3>
+</div>
+<form name="remesaForm">
+    <div class="modal-body">
+        <!-- CONCEPTE -->
+        <div class="form-group">
+            <label>Concepte</label>
+            <input type="text" name="concepte" class="form-control" ng-model="remesa.concepte" required>
+            <p ng-show="form.remesaForm.concepte.$invalid && !form.remesaForm.concepte.$pristine" class="help-block">Concepte requerit.</p>
+        </div>
+
+        <!-- DATA REMESA -->
+        <div class="form-group">
+            <label>Data remesa</label>
+            <input type="date" id="dataRemesa" name="dataRemesa" class="form-control" ng-model="remesa.dataRemesa"  required>
+            <p ng-show="form.remesaForm.username.$invalid" class="help-block">Data invàlida.</p>            
+        </div>        
+
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" ng-click="desar()" ng-disabled="form.remesaForm.$invalid">Save</button>
+        <button class="btn btn-warning" onclick="window.location.href='#/'">Cancel</button>
+    </div>
+</form>

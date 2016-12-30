@@ -1,0 +1,42 @@
+
+<ng-include src="urlMenu"></ng-include>
+
+<h3>Llistat socis/transeünts/alumnes club de tennis Bocairent (de alta)</h3>
+Filtre: <input type="text" ng-model="filtro" ><label>&nbsp;&nbsp;Acció a realitzar amb els seleccionats :<select id="accio" class=" input-sm"  name="accio" type="checkbox" ng-change="changeAccio()" ng-model="accio" ng-options="accio.idAccio as accio.nom for accio in opts_accio" ><option value="">--Escull opci&oacute;--</option></select></label><hr>
+     <div class="table-responsive"> 
+  <table class="table table-striped table-bordered" style='border: 2px'>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>DNI</th>
+      <th>Cognoms</th>
+      <th>Nom</th>	
+      <th>Data Alta</th>
+      <th>Email</th>
+      <th>Telefon</th>
+      <th>Relació Club</th>
+      <th><input id="selectedAll" name="selectedAll" type="checkbox" ng-model="selectedAll" ng-change="changeSelection()"/>&nbsp;Marca TOT</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="persona in persones | filter:filtro" style="background-color: {{$even?'white':'silver'}}">       
+        <td><a href="#/persona/edit/{{persona.idPersona}}"><span class="glyphicon glyphicon-edit"></span>&nbsp;{{$index+1}}</a></td>
+      <td>{{persona.nif}}</td>
+      <td>{{persona.cognoms}}</td>
+      <td>{{persona.nom}}</td>
+      <td>{{persona.dataAlta}}</td>
+      <td>{{persona.email}}</td>
+      <td>{{persona.telefon}}</td>
+      <td ng-switch on="persona.tipusRelacioClub">
+        <span ng-switch-when="SOCI">SOCI</span>
+        <span ng-switch-when="TRANSE">TRANSEÜNT</span>
+        <span ng-switch-when="ALUMNE">ALUMNE</span>
+	<span ng-switch-when="ALTRA">ALTRA</span>
+        <span ng-switch-default>Desconegut</span>
+      </td>      
+      <td><input id="selected" name="selected" type="checkbox" ng-model="persona.selected" /></td>  
+      <!-- <td><button class="btn" ng-confirm-click="Estas segur de voler esborrar a '{{persona.nom}} {{persona.ape1}} {{persona.ape2}}'" confirmed-click="borrar(persona.idPersona)"><span class="glyphicon glyphicon-remove"></span>&nbsp;ESBORRAR</button></td> -->
+    </tr>
+  </tbody>
+</table>
+     </div>

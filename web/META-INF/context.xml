@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context antiJARLocking="true" path="/persones">
+    <Resource
+        type="javax.sql.DataSource"
+        auth="Container" 
+        name="jdbc/tennis" 
+        driverClassName="com.mysql.jdbc.Driver"
+        url="jdbc:mysql://localhost:3306/club_tennis"
+        username="root" 
+        password="4m0mjgds"
+
+        maxActive="100" 
+        maxIdle="30" 
+        maxWait="10000"
+        validationQuery=""
+     /> 
+</Context>

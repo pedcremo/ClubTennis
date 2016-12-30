@@ -1,0 +1,132 @@
+
+<script>
+  $(function() {
+    $( "#dataAlta").datepicker({dateFormat: 'dd/mm/yy'});
+    $( "#dataBaixa").datepicker({dateFormat: 'dd/mm/yy'});
+    $( "#dataNaixement").datepicker({dateFormat: 'dd/mm/yy'});
+  });
+  </script>
+<ng-include src="urlMenu"></ng-include>
+<h3>Nova alta</h3>
+    <form name="form" class="form-inline" novalidate>
+        <small> (<span class="glyphicon glyphicon-remove"></span>) Camps obligatoris</small>
+      <fieldset >
+        <legend>Dades personals</legend>
+        <div class="form-group" ng-class="{ 'has-error has-feedback': form.nif.$error.required }">
+            <label for="nif">NIF<br><input id="nif" class="form-control input-sm" name="nif" size="9" type="text" ng-model="persona.nif" required ng-pattern="/(^[X-Z]\d{7}[A-Z]$)|(^\d{8}[A-Z]$)/" title="" ca-tooltip />
+            <span ng-show="form.nif.$error.required" class="glyphicon glyphicon-remove" style="left:-20px;"></span>
+            
+            </label>
+	
+            
+            <span ng-show="form.nif.$error.pattern">Format NIF no v&agrave;lid</span>
+        </div>
+        <div class="form-group"  ng-class="{ 'has-error has-feedback': form.nom.$error.required }">
+            <label for="nom">Nom<br><input id="nom" class="form-control input-sm" name="nom" type="text" ng-model="persona.nom" required title="" ca-tooltip /></label>
+	     <span ng-show="form.nom.$error.required" class="glyphicon glyphicon-remove" style="left:-20px;"></span>
+        </div>
+        <div class="form-group"  ng-class="{ 'has-error has-feedback': form.cognoms.$error.required }">
+            <label for="cognoms">Cognoms<br><input id="cognoms" class="form-control input-sm" name="cognoms" type="text" ng-model="persona.cognoms" required /></label>
+            <span ng-show="form.cognoms.$error.required" class="glyphicon glyphicon-remove" style="left:-20px;"></span>
+        </div>
+        
+        <div class="form-group">
+              <label for="telefon">Tel&egrave;fon:<br><input id="telefon" class="form-control input-sm" size="9" name="telefon" type="number" ng-maxlength="9" ng-minlength="9" ng-model="persona.telefon"  /></label>
+       
+                <span ng-show="form.telefon.$error.minlength">Format tel&egrave;fon no v&agrave;lid</span>
+          </div>
+        <div class="form-group">
+            <label for="email">Email<br><input id="email" class="form-control    input-sm" name="email" type="email" ng-model="persona.email" /></label>
+	
+          <span ng-show="form.email.$error.email">Format email no v&agrave;lid</span>
+
+        </div>
+        <div class="form-group">
+            <label for="dataNaixement">Data naixement<br><input id="dataNaixement" class="form-control    input-sm" name="dataNaixement" size="10" type="text" ng-model="persona.dataNaixement" /></label>
+        </div>
+        <div class="form-group"  ng-class="{ 'has-error has-feedback': form.dataAlta.$error.required }">
+            <label for="dataAlta">Data alta<br><input id="dataAlta" class="form-control    input-sm" name="dataAlta" size="10" type="text" ng-model="persona.dataAlta" required /></label>
+            <span ng-show="form.dataAlta.$error.required" class="glyphicon glyphicon-remove" style="left:-20px;"></span>
+        </div>
+        <div class="form-group"  ng-class="{ 'has-error has-feedback': form.tipusRelacioClub.$error.required }">
+            <label for="tipusRelacioClub">Tipus relaci&oacute; amb el club<br><select id="tipusRelacioClub" class="form-control input-sm"  name="tipusRelacioClub" type="checkbox" ng-change="" ng-model="persona.tipusRelacioClub" ng-options="tipus_relacio.idRelacio as tipus_relacio.nom for tipus_relacio in opts_tipus_relacio" required ><option value="">--Escull opci&oacute;--</option></select></label>
+            <span ng-show="form.tipusRelacioClub.$error.required" class="glyphicon glyphicon-remove" style="left:-35px;"></span>
+
+        </div>
+        <br>
+        <div class="form-group">
+        <label for="comentaris">Comentaris:<br><textarea id="comentaris" class="form-control input-sm" name="comentaris" ng-model="persona.comentaris" rows="4" cols="80" /></textarea></label>
+        </div>
+        </fieldset>
+      <fieldset>
+        <legend>Adreça</legend>
+            <div class="form-group"  ng-class="{ 'has-error has-feedback': form.carrer.$error.required }">
+                <label for="carrer">Carrer<br><input id="carrer" class="form-control input-sm" name="carrer" type="text" ng-model="persona.addressData.carrer"  required /></label>
+                <span ng-show="form.carrer.$error.required" class="glyphicon glyphicon-remove" style="left:-20px;"></span>
+            </div>
+            <div class="form-group"  ng-class="{ 'has-error has-feedback': form.poblacio.$error.required }">
+                <label for="poblacio">Poblaci&oacute;<br><input id="poblacio" class="form-control input-sm" name="poblacio" type="text" ng-model="persona.addressData.poblacio" required /></label>
+                <span ng-show="form.poblacio.$error.required" class="glyphicon glyphicon-remove" style="left:-20px;"></span>
+            </div>
+            <div class="form-group"  ng-class="{ 'has-error has-feedback': form.provincia.$error.required }">
+                <label for="provincia">Provincia<br><input id="provincia" class="form-control input-sm" name="provincia" type="text" ng-model="persona.addressData.provincia"  required /></label>
+                <span ng-show="form.provincia.$error.required" class="glyphicon glyphicon-remove" style="left:-20px;"></span>
+            </div>
+            <div class="form-group"  ng-class="{ 'has-error has-feedback': form.cp.$error.required }">
+                <label for="cp">Codi postal<br><input id="cp" class="form-control input-sm" name="cp" size="5" type="text" ng-model="persona.addressData.cp" ng-pattern="/^([1-9]{2}|[0-9][1-9]|[1-9][0-9])[0-9]{3}$/" required /></label> 
+                <span ng-show="form.cp.$error.required" class="glyphicon glyphicon-remove" style="left:-20px;"></span>
+                <span ng-show="form.cp.$error.pattern">Format CP no v&agrave;lid</span>
+            </div>
+          
+      </fieldset>   
+      <fieldset>
+        <legend>Dades bancaries</legend>
+            <div class="form-group">
+                <label for="iban">IBAN<br><input id="iban" class="form-control input-sm" size="4" name="iban" type="text" ng-pattern="/^\w{4}$/" ng-model="persona.dadesBancaries.iban"  /> </label>    
+                <span ng-show="form.iban.$error.pattern">Format IBAN no v&agrave;lid</span>
+            </div>
+            <div class="form-group">
+                <label for="entitat">Entitat<br><input id="entitat" class="form-control input-sm" size="4" name="entitat" type="text" ng-pattern="/^\d{4}$/" ng-model="persona.dadesBancaries.entitat"  /></label>   
+                <span ng-show="form.entitat.$error.pattern">Format Entitat no v&agrave;lid</span>
+            </div>
+            <div class="form-group">
+                <label for="oficina">Oficina</br><input id="oficina" class="form-control input-sm" size="4" name="oficina" type="text" ng-pattern="/^\d{4}$/" ng-model="persona.dadesBancaries.oficina"  />  </label>    
+                <span ng-show="form.oficina.$error.pattern">Format Oficina no v&agrave;lid</span>
+            </div>
+            <div class="form-group">
+                <label for="dc">DC</br><input id="dc" class="form-control input-sm" size="2" name="dc" type="text" ng-pattern="/^\d{2}$/" ng-model="persona.dadesBancaries.dc"  />  </label>    
+                <span ng-show="form.dc.$error.pattern">Format DC no v&agrave;lid</span>
+            </div>
+            <div class="form-group">
+                <label for="compte">Compte<br><input id="compte" class="form-control input-sm" size="10" name="compte" type="text" ng-pattern="/^\d{10}$/" ng-model="persona.dadesBancaries.compte"  /></label>      
+                <span ng-show="form.compte.$error.pattern">Format Compte no v&agrave;lid</span>
+            </div>
+          
+      </fieldset>  
+      <fieldset>
+      <legend>IMPORTANT</legend>
+          <div class="form-group">
+          <div class="checkbox">    
+            <label for="deBaixa"><input id="deBaixa" name="deBaixa" type="checkbox" ng-model="persona.marcadorsInteres.deBaixa" />Baixa:</label>
+          </div>
+              <label for="dataBaixa">Data baixa<br><input id="dataBaixa" class="form-control input-sm" size="10" name="dataBaixa" type="text" ng-model="persona.dataBaixa" /></label>
+          <br>
+          <div class="checkbox">
+            <label for="ambAlerta"><input id="ambAlerta" name="ambAlerta" type="checkbox" ng-model="persona.marcadorsInteres.ambAlerta" />Alerta:</label>
+          </div>
+          <label for="raoAlerta">Ra&oacute; alerta<br><textarea id="raoAlerta" class="form-control    input-sm" name="raoAlerta" ng-model="persona.marcadorsInteres.raoAlerta" rows="4" cols="80"></textarea></label>
+          </div>
+      </fieldset>       
+        <button class="btn btn-default" type="button" ng-click="desar()" ng-disabled="form.$invalid" ><span class="glyphicon glyphicon-save"></span>&nbsp;Desar</button>
+    </form>    
+ <small> (<span class="glyphicon glyphicon-remove"></span>) Camps obligatoris</small>
+ <div ng-show="bussinessMessages.length > 0">
+    <div>S'han produït els següents errors</div>
+    <ul>
+        <li ng-repeat="bussinessMessage in bussinessMessages">
+            <strong ng-hide="businessMessage.fieldName == null">{{bussinessMessage.fieldName}}:</strong>
+            {{bussinessMessage.message}}.
+        </li>
+    </ul>
+    <button ng-click="bussinessMessages = []" >Llevar missatges</button>
+</div>

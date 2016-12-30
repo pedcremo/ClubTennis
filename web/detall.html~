@@ -1,0 +1,86 @@
+<a href="#/hipoteca/listado">Tornar al llistat d'hipoteques</a>   
+
+ <h1>C&agrave;lcul hipoteca</h1>
+    <form name="form" novalidate>
+      <fieldset>
+        <legend>Dades personals</legend>
+          <label for="nif">NIF:</label><input id="nif" name="nif" type="text" ng-model="hipoteca.nif" required ng-pattern="/(^[X-Z]\d{7}[A-Z]$)|(^\d{8}[A-Z]$)/" title="NIF del titular de la hipoteca" ca-tooltip />
+	<span ng-show="form.nif.$error.required && form.nif.$dirty">El camp &eacute;s obligatori</span>
+      <span ng-show="form.nif.$error.pattern">Format NIF no v&agrave;lid</span>
+<br>
+          <label for="nombre">Nom:</label><input id="nombre" name="nombre" type="text" ng-model="hipoteca.nombre" required title="Nom del hipotecat" ca-tooltip />
+	<span ng-show="form.nombre.$error.required && form.nombre.$dirty">El camp &eacute;s obligatori</span>
+<br>
+          <label for="ape1">1er Cognom:</label><input id="ape1" name="ape1" type="text" ng-model="hipoteca.ape1" required />
+	<span ng-show="form.ape1.$error.required && form.ape1.$dirty">El camp &eacute;s obligatori</span>
+<br>
+	  <label for="ape2">2on Cognom:</label><input id="ape2" name="ape2" type="text" ng-model="hipoteca.ape2" required />
+	<span ng-show="form.ape2.$error.required && form.ape2.$dirty">El camp &eacute;s obligatori</span>
+<br>
+          <label for="edad">Edat:</label><input id="edad" name="edad" type="number" ng-model="hipoteca.edad" required min="18" max="80"  />
+	<span ng-show="form.edad.$error.required && form.edad.$dirty">El camp &eacute;s obligatori</span>
+      <span ng-show="form.edad.$error.number">No &eacute;s un n&uacute;mero</span>
+      <span ng-show="form.edad.$error.min">La edat m&iacute;nima &eacute;s de 18 anys</span>
+      <span ng-show="form.edad.$error.max">La edat m&agrave;xima &eacute;s de 80 anys</span> 
+
+<br>
+          <label for="telefono">Tel&egrave;fon:</label><input id="telefono" name="telefono" type="number" ng-maxlength="9" ng-minlength="9" ng-model="hipoteca.telefono" required />
+       <span ng-show="form.telefono.$error.required && form.telefono.$dirty">El camp &eacute;s obligatori</span>
+       <span ng-show="form.telefono.$error.minlength">Format tel&egrave;fon no v&agrave;lid</span>
+<br>
+       	  <label for="email">Email:</label><input id="email" name="email" type="email" ng-model="hipoteca.email" required />
+	<span ng-show="form.email.$error.required && form.email.$dirty">El camp &eacute;s obligatori</span>
+      <span ng-show="form.email.$error.email">Format email no v&agrave;lid</span>
+
+<br>
+      </fieldset>
+      <fieldset>
+        <legend>Dades econ&ograve;miques</legend>
+          <label for="ingresos_mensuales">Ingressos mensuals:</label><input id="ingresos_mensuales" name="ingresos_mensuales" type="number" ng-model="hipoteca.ingresosMensuales" min="0" required />
+	<span ng-show="form.ingresos_mensuales.$error.required && form.ingresos_mensuales.$dirty">El camp &eacute;s obligatori</span>
+      <span ng-show="form.ingresos_mensuales.$error.number">No &eacute;s un n&uacute;mero</span>
+      <span ng-show="form.ingresos_mensuales.$error.min">Els ingressos mensuals no poden ser menors a 0 €</span>
+      
+<br>
+          <label for="capital">Capital:</label><input id="capital" name="capital" type="number" ng-model="hipoteca.datosFinancieros.capital" required/><br>
+          <label for="tipo_interes">Tipus d'inter&egrave;s:</label><select id="tipo_interes" name="tipo_interes" type="checkbox" ng-change="resetValues()" ng-model="hipoteca.datosFinancieros.tipoInteres" ng-options="tipo_interes.idInteres as tipo_interes.nombre for tipo_interes in opts_tipo_interes"><option value="">--Elige opcion--</option></select>{{hipoteca.datosFinancieros.tipoInteres}}<br>
+          <label for="tipo_euribor">Tipus d'Euribor:</label><select ng-disabled="hipoteca.datosFinancieros.tipoInteres==='F' || hipoteca.datosFinancieros.tipoInteres===''" id="tipo_euribor" name="tipo_euribor" type="checkbox" ng-change="changeEuribor()" ng-model="hipoteca.datosFinancieros.tipoEuribor" ng-options="tipo_euribor.idEuribor as tipo_euribor.nombre for tipo_euribor in opts_tipo_euribor"><option value="">--Escull opci&oacute;--</option></select>{{hipoteca.datosFinancieros.tipoEuribor}}<br>
+          <label for="euribor">Euribor:</label><input ng-disabled="hipoteca.datosFinancieros.tipoInteres==='F' || hipoteca.datosFinancieros.tipoInteres===''" id="euribor" name="euribor" type="number"  ng-model="hipoteca.datosFinancieros.euribor" /><br>
+          <label for="diferencial">Diferencial:</label><input ng-disabled="hipoteca.datosFinancieros.tipoInteres==='F' || hipoteca.datosFinancieros.tipoInteres===''" id="diferencial" name="diferencial" type="number" ng-model="hipoteca.datosFinancieros.diferencial" /><br>
+          <label for="interes_fijo">Inter&egrave;s Fixe:</label><input ng-disabled="hipoteca.datosFinancieros.tipoInteres==='V' || hipoteca.datosFinancieros.tipoInteres===''" id="interes_fijo" name="interes_fijo" type="text" ng-model="hipoteca.datosFinancieros.interesFijo" /><br>
+          <label for="plazo_anyos">Termini anys:</label><input id="plazo_anyos" name="plazo_anyos" type="number" ng-model="hipoteca.datosFinancieros.plazoAnyos" min="1" max="40" required/>
+	<span ng-show="form.plazo_anyos.$error.required && form.plazo_anyos.$dirty">El camp &eacute;s obligatori</span>
+      <span ng-show="form.plazo_anyos.$error.number">No &eacute;s un n&uacute;mero</span>
+      <span ng-show="form.plazo_anyos.$error.min">M&iacute;nim 1 any</span>
+      <span ng-show="form.plazo_anyos.$error.max">M&agrave;xim 40 anys</span>
+
+
+<br>
+      </fieldset>      
+      <fieldset>
+      <legend>Productes associats</legend>
+          <label for="producto_segurocasa">Segur de casa:</label><input id="producto_segurocasa" name="producto_segurocasa" type="checkbox" ng-model="hipoteca.productosContratados.seguroCasa" /><br>
+          <label for="producto_nomina">N&ograve;mina:</label><input id="producto_nomina" name="producto_nomina" type="checkbox" ng-model="hipoteca.productosContratados.nomina" /><br>
+         <label for="producto_segurovida">Segur de vida:</label><input id="producto_segurovida" name="producto_segurovida" type="checkbox" ng-model="hipoteca.productosContratados.seguroVida" /><br>
+           
+      </fieldset>
+       <fieldset>
+      <legend>RESULTATS</legend>
+         <label for="cuota_mensual">Quota mensual:</label><input ng-disabled="true" id="cuota_mensual" name="cuota_mensual" type="text" ng-model="hipoteca.cuotaMensual" /><br>
+         <label for="interes_aplicado">Inter&egrave;s aplicat:</label><input ng-disabled="true" id="interes_aplicado" name="interes_aplicado" type="text" ng-model="hipoteca.interesAplicado" /><br>
+           <!-- <span> TOTAL a pagar en {{hipoteca.plazo_anyos}} anys -> {{hipoteca.plazo_anyos*12*hipoteca.cuota_mensual|number:2}} euros</span> --> 
+      </fieldset>
+        <button type="button" ng-click="calcularHipo()" ng-disabled="form.$invalid">Calcular</button>
+        <button type="button" ng-click="guardar()" ng-disabled="form.$invalid" >Desar</button>
+    </form>    
+
+ <div ng-show="bussinessMessages.length > 0">
+    <div>S'han produït els següents errors</div>
+    <ul>
+        <li ng-repeat="bussinessMessage in bussinessMessages">
+            <strong ng-hide="businessMessage.fieldName == null">{{bussinessMessage.fieldName}}:</strong>
+            {{bussinessMessage.message}}.
+        </li>
+    </ul>
+    <button ng-click="bussinessMessages = []" >Llevar missatges</button>
+</div>

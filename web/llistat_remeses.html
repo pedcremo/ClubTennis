@@ -1,0 +1,31 @@
+
+<ng-include src="urlMenu"></ng-include>
+
+<h3>Llistat remeses club de tennis Bocairent</h3>
+Filtre: <input type="text" ng-model="filtro" ><label>&nbsp;&nbsp;Acció a realitzar amb els seleccionats :<select id="accio" class=" input-sm"  name="accio" type="checkbox" ng-change="changeAccio()" ng-model="accio" ng-options="accio.idAccio as accio.nom for accio in opts_accio" ><option value="">--Escull opci&oacute;--</option></select></label><hr>
+     <div class="table-responsive"> 
+  <table class="table table-striped table-bordered" style='border: 2px'>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Concepte</th>
+      <th>Data Remesa</th>
+      <th>Import</th>
+      <th>Num rebuts</th>      
+      <th><input id="selectedAll" name="selectedAll" type="checkbox" ng-model="selectedAll" ng-change="changeSelection()"/>&nbsp;Marca TOT</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="remesa in remeses | filter:filtro" style="background-color: {{$even?'white':'silver'}}">       
+        <td><a href="#/remesa/edit/{{remesa.idRemesa}}"><span class="glyphicon glyphicon-edit"></span>&nbsp;{{$index+1}}</a></td>
+    
+      <td>{{remesa.concepte}}</td>      
+      <td>{{remesa.dataRemesa}}</td>
+      <td>{{remesa.import}}</td>
+      <td>{{remesa.numRebuts}}</td>
+      <td><input id="selected" name="selected" type="checkbox" ng-model="remesa.selected" /></td>  
+      
+    </tr>
+  </tbody>
+</table>
+     </div>

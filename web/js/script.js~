@@ -1,0 +1,380 @@
+var app=angular.module("app",['ngRoute']);
+
+
+
+/*function calcularHipoteca(datosFinancieros,productosContratados){
+          var interes_aplicado_=parseFloat(datosFinancieros['euribor'])+parseFloat(datosFinancieros['diferencial']);
+    
+          if (datosFinancieros['tipoInteres']==="F"){//Interés fixe
+            interes_aplicado_=parseFloat(datosFinancieros['interesFijo']);
+          }
+    
+          if (productosContratados['seguroCasa']) interes_aplicado_-=0.05;
+          if (productosContratados['nomina']) interes_aplicado_-=0.05;
+          if (productosContratados['seguroVida']) interes_aplicado_-=0.05;
+    
+          return {'interesAplicado':interes_aplicado_,
+                 'cuotaMensual':((datosFinancieros['capital']*interes_aplicado_)/12) / (100*(1-Math.pow(1+((interes_aplicado_/12)/100),(-1)*datosFinancieros['plazoAnyos']*12)))
+          };
+}
+
+app.value("calcularHipoteca",calcularHipoteca);
+*/
+
+function PersonaResourceProvider() {
+  var _baseUrl;
+  this.setBaseUrl = function(baseUrl) {
+    _baseUrl = baseUrl;
+  };
+  this.$get=['$http','$q',function($http,$q) {
+    return new PersonaResource($http,$q,_baseUrl);
+  }];
+}
+
+function PersonaResource($http,$q,baseUrl) {
+  
+  this.get=function(idPersona) {
+        var defered=$q.defer();
+	var promise=defered.promise;
+        $http({
+          method: 'GET',          
+          url: baseUrl + '/api/Persona/'+idPersona
+        }).success(function(data, status, headers, config) {            
+	    defered.resolve(data);
+        }).error(function(data, status, headers, config) {            
+	    if (status === 400) {
+                defered.reject(data);
+            } else {
+                throw new Error("Fallo obtener los datos:" + status + "\n" + data);
+            }
+        });
+	return promise;
+  };
+    
+  this.list=function() {
+	var defered=$q.defer();
+	var promise=defered.promise;
+
+        $http({
+          method: 'GET',          
+          url: baseUrl +'/api/Persona'
+        }).success(function(data, status, headers, config) {           
+	    defered.resolve(data);
+        }).error(function(data, status, headers, config) {            
+	    if (status === 400) {
+                defered.reject(data);
+            } else {
+                throw new Error("Fallo obtener los datos:" + status + "\n" + data);
+            }
+        });
+	return promise;
+  };
+  this.insert = function(persona) {
+        var defered = $q.defer();
+        var promise = defered.promise;
+
+        $http({
+            method: 'POST',
+            url: baseUrl + '/api/Persona',
+            data: persona
+        }).success(function(data, status, headers, config) {
+            defered.resolve(data);
+        }).error(function(data, status, headers, config) {
+            if (status === 400) {
+                defered.reject(data);
+            } else {
+                throw new Error("Fallo obtener los datos:" + status + "\n" + data);
+            }
+        });
+
+        return promise;
+    };
+    this.update = function(idPersona, persona) {
+        var defered = $q.defer();
+        var promise = defered.promise;
+
+        $http({
+            method: 'PUT',
+            url: baseUrl + '/api/Persona/' + idPersona,
+            data: persona
+        }).success(function(data, status, headers, config) {
+            defered.resolve(data);
+        }).error(function(data, status, headers, config) {
+            if (status === 400) {
+                defered.reject(data);
+            } else {
+                throw new Error("Fallo obtener los datos:" + status + "\n" + data);
+            }
+        });
+
+        return promise;
+    };
+    this.delete = function(idPersona) {
+        var defered = $q.defer();
+        var promise = defered.promise;
+
+        $http({
+            method: 'DELETE',
+            url: baseUrl + '/api/Persona/' + idPersona
+        }).success(function(data, status, headers, config) {
+            defered.resolve(data);
+        }).error(function(data, status, headers, config) {
+            if (status === 400) {
+                defered.reject(data);
+            } else {
+                throw new Error("Fallo obtener los datos:" + status + "\n" + data);
+            }
+        });
+
+        return promise;
+    };
+}
+
+app.provider("personaResource",PersonaResourceProvider);
+
+app.constant("baseUrl", ".");
+app.config(['baseUrl', 'personaResourceProvider',
+  function(baseUrl, personaResourceProvider) {
+    personaResourceProvider.setBaseUrl(baseUrl);
+  }
+]);
+
+app.config(['$routeProvider',function($routeProvider) {
+  
+  $routeProvider.when('/', {
+    templateUrl: "main.html",
+    controller: "MainControler"
+  }); 
+  
+  $routeProvider.when('/persona/llistat', {
+    templateUrl: "llistat.html",
+    controller: "PersonaListController",
+    resolve: {
+      persones:['personaResource','$route',function(personaResource) {
+        return personaResource.list();
+      }]
+    }
+  });
+     
+  $routeProvider.when('/persona/edit/:idPersona', {
+            templateUrl: "detall.html",
+            controller: "EditPersonaController",
+            resolve: {
+                persona: ['personaResource', '$route', function(personaResource, $route) {
+                        return personaResource.get($route.current.params.idPersona);
+                    }]
+            }
+    });
+    
+     
+   $routeProvider.when('/persona/nova', {
+            templateUrl: "detall.html",
+            controller: "NewPersonaController"
+        });
+      
+  $routeProvider.otherwise({
+        redirectTo: '/'
+  });   
+  
+}]);
+
+app.directive('caTooltip', function() {
+    return {
+        // Restrict it to be an attribute in this case
+        restrict: 'A',
+        // responsible for registering DOM listeners as well as updating the DOM
+        link: function(scope, element, attrs) {
+            //$(element).tooltip(scope.$eval(attrs.toolbarTip));
+	    $(element).tooltip();
+        }
+    };
+});
+
+app.controller("NewPersonaController", ['$scope', 'personaResource', '$location', function($scope, personaResource, $location) {
+   var result_persona=""; 
+      
+    $scope.opts_tipus_relacio=[
+    {
+      idRelacio:"SOCI",
+      nom:"SOCI"
+    },
+    {
+      idRelacio:"TRANSE",
+      nom:"TRANSEÜNT"
+    },
+    {
+      idRelacio:"ALUMNE",
+      nom:"ALUMNE"
+    },	
+    {
+      idRelacio:"ALTRA",
+      nom:"ALTRA"
+    }
+    ];
+    /*
+    $scope.opts_tipo_euribor=[
+    {
+      idEuribor:"E1",
+      nombre:"EURIBOR"
+    },
+    {
+      idEuribor:"E2",
+      nombre:"EURIBOR3"
+    }];*/
+        
+        
+   $scope.persona={
+    nif:"",
+    nom:"",
+    ape1:"",
+    ape2:"",    
+    telefon:"",
+    email:"",
+    dataNaixement:undefined,
+    dataAlta:undefined,
+    dataBaixa:undefined,
+    comentaris:undefined,
+    tipusRelacioClub:undefined, //Soci, transeünt, alumne,  altre
+
+    addressData:{
+	carrer:undefined,
+	poblacio:undefined,
+	provincia:undefined,
+ 	cp:undefined,
+    },
+
+    dadesBancaries:{
+        iban:undefined,        
+        entitat:undefined,
+        oficina:undefined,
+        dc:undefined,
+        compte:undefined               
+    },
+    
+    marcadorsInteres: {
+	deBaixa:false,  //Activat quan donem de baixa	
+	ambAlerta:false,  //Activat quan té alguna alerta d'interés. Ex. Falta DNI, Falta títol, adreça o qualsevol altra cosa.
+	raoAlerta:undefined  
+    },
+    //cuotaMensual:result_hipoteca['cuotaMensual'],
+    //interesAplicado:result_hipoteca['interesAplicado']
+  };
+  
+  $scope.desar = function() {
+            if ($scope.form.$valid) {
+                personaResource.insert($scope.persona).then(function() {
+                    $location.path("/persona/llistat");
+                }, function(bussinessMessages) {
+                    $scope.bussinessMessages = bussinessMessages;
+                });
+            } else {
+                alert("Hi ha dades invàlides");
+            }
+        };
+        
+    /*$scope.calcularHipo=function(){    
+            
+            var result_hipoteca=calcularHipoteca($scope.hipoteca.datosFinancieros,$scope.hipoteca.productosContratados);
+
+            $scope.hipoteca.interesAplicado=result_hipoteca['interesAplicado'];
+            $scope.hipoteca.cuotaMensual=result_hipoteca['cuotaMensual'];
+    };
+  
+  
+    $scope.changeEuribor=function(){
+            $scope.hipoteca.datosFinancieros.interesFijo=undefined;
+            $scope.hipoteca.datosFinancieros.euribor=0.4;
+            if ($scope.hipoteca.datosFinancieros.tipoEuribor==="E2") $scope.hipoteca.datosFinancieros.euribor=0.8; 
+    };
+        
+    $scope.resetValues=function(){
+            $scope.hipoteca.datosFinancieros.interesFijo=undefined;
+            $scope.hipoteca.datosFinancieros.euribor=undefined;
+            $scope.hipoteca.datosFinancieros.diferencial=undefined;
+    };*/  
+        
+   
+}]);
+
+app.controller("EditPersonaController", ['$scope', 'persona', 'personaResource', '$location', function($scope, persona, personaResource, $location) {
+
+        /*$scope.opts_tipo_interes=[
+            {
+              idInteres:"F",
+              nombre:"FIJO"
+            },
+            {
+              idInteres:"V",
+              nombre:"VARIABLE"
+        }];
+        
+        $scope.opts_tipo_euribor=[
+            {
+              idEuribor:"E1",
+              nombre:"EURIBOR"
+            },
+            {
+              idEuribor:"E2",
+              nombre:"EURIBOR3"
+        }];*/
+    
+        $scope.persona = persona;
+        $scope.persona.telefon=parseInt($scope.persona.telefon);
+
+        $scope.guardar = function() {
+            if ($scope.form.$valid) {
+                 personaResource.update($scope.persona.idPersona, $scope.persona).then(function() {
+                    $location.path("/persona/llistat");
+                }, function(bussinessMessages) {
+                    $scope.bussinessMessages = bussinessMessages;
+                });
+            } else {
+                alert("Hi ha dades invàlides");
+            }
+        };
+        
+        /*$scope.calcularHipo=function(){    
+            
+            var result_hipoteca=calcularHipoteca($scope.hipoteca.datosFinancieros,$scope.hipoteca.productosContratados);
+
+            $scope.hipoteca.interesAplicado=result_hipoteca['interesAplicado'];
+            $scope.hipoteca.cuotaMensual=result_hipoteca['cuotaMensual'];
+        };
+  
+  
+        $scope.changeEuribor=function(){
+            $scope.hipoteca.datosFinancieros.interesFijo=undefined;
+            $scope.hipoteca.datosFinancieros.euribor=0.4;
+            if ($scope.hipoteca.datosFinancieros.tipoEuribor==="E2") $scope.hipoteca.datosFinancieros.euribor=0.8; 
+        };
+        
+        $scope.resetValues=function(){
+            $scope.hipoteca.datosFinancieros.interesFijo=undefined;
+            $scope.hipoteca.datosFinancieros.euribor=undefined;
+            $scope.hipoteca.datosFinancieros.diferencial=undefined;
+        };*/  
+        
+       
+ }]);
+app.controller("PersonaListController", ['$scope', 'persones', 'personaResource', function($scope, persones, personaResource) {
+        $scope.persones = persones;
+
+        $scope.borrar = function(idPersona) {
+            personaResource.delete(idPersona).then(function() {
+                personaResource.list().then(function(persones) {
+                    $scope.persones = persones;
+                }, function(bussinessMessages) {
+                    $scope.bussinessMessages = bussinessMessages;
+                });
+            }, function(bussinessMessages) {
+                $scope.bussinessMessages = bussinessMessages;
+            });
+        };
+
+    }]);
+  
+
+app.controller("MainControler", ['$scope',function($scope) {
+	$scope.urlCap="cap.html";
+	$scope.urlPeu="peu.html";
+}]);

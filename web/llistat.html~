@@ -1,0 +1,35 @@
+<a href="#/">Tornar a home</a><br>
+<a href="#/persona/nova">Nova alta</a>
+
+<h1>Llistat socis/transeünts/estudiants club de tennis Bocairent (de alta)</h1>
+    Filtre: <input type="text" ng-model="filtro" ><hr>
+  <table style='border: 2px'>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>DNI</th>
+      <th>Cognoms</th>
+      <th>Nom</th>	
+      <th>Data Alta</th>
+      <th>Relació Club</th>
+      <th>Esborrar</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="persona in persones | filter:filtro" style="background-color: {{$even?'white':'silver'}}">       
+      <td><a href="#/persona/edit/{{persona.idPersona}}">{{$index+1}}</a></td>
+      <td>{{persona.nif}}</td>
+      <td>{{persona.ape1}} {{persona.ape2}}</td>
+      <td>{{persona.nom}}</td>
+      <td>{{persona.dataAlta}}</td>
+      <td ng-switch on="persona.tipusRelacioClub">
+        <span ng-switch-when="S">SOCI</span>
+        <span ng-switch-when="T">TRANSEÜNT</span>
+        <span ng-switch-when="E">ALUMNE</span>
+	<span ng-switch-when="A">ALTRA</span>
+        <span ng-switch-default>Desconegut</span>
+      </td>      
+      <td><button ng-click="borrar(persona.idPersona)">ESBORRAR</button></td>
+    </tr>
+  </tbody>
+</table>
